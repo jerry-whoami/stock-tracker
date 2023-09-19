@@ -9,6 +9,6 @@
 </script>
 
 <Navbar />
-<main>
+<main class="py-8 px-4 mt-16 md:px-12 md:mt-12">
 	<slot />
 </main>
