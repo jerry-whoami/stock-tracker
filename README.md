@@ -21,7 +21,14 @@ mv .env.example .env
 npm install
 ```
 
-3. Iniciar la aplicacion con docker
+3. Preparar la base de datos(Puede que tengas que cambiar el nombre del contenedor)
+
+```bash
+docker cp ./database/seeder.csv stocktracker-postgres-1:/docker-entrypoint-initdb.d/products.csv
+cat ./database/migrations.sql | docker exec -i stocktracker-postgres-1 psql -U postgres -d stocks
+```
+
+4. Iniciar la aplicacion con docker
 
 ```bash
 docker compose up -d
