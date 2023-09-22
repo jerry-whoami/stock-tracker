@@ -22,7 +22,6 @@
 		<!-- For large screens -->
 		<div class="flex gap-4 items-center max-md:hidden">
 			<NavbarItem active href="#">Productos</NavbarItem>
-			<NavbarItem href="#">Reportes</NavbarItem>
 		</div>
 
 		<!-- For small screens -->

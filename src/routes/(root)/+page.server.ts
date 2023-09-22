@@ -1,18 +1,14 @@
-import { sortear } from '$lib/algoritmos';
 import type { PageServerLoad } from './$types';
+import * as Product from '../../models/products';
+import { pool } from '$lib/server/database';
+import { paginar } from '$lib/algoritmos';
 
-const rows = [
-	{ code: 'SO-192', title: 'Sneaker', quantity: 12, price: 123.34, cost: 60 },
-	{ code: 'SO-192', title: 'Sneaker', quantity: 12, price: 123.34, cost: 60 },
-	{ code: 'SO-192', title: 'Sneaker', quantity: 12, price: 123.34, cost: 60 },
-	{ code: 'SO-192', title: 'Sneaker', quantity: 12, price: 123.34, cost: 60 },
-	{ code: 'SO-192', title: 'Sneaker', quantity: 12, price: 123.34, cost: 60 }
-];
-
-export const load: PageServerLoad = function ({}) {
-	let products = sortear();
+export const load: PageServerLoad = async function ({ url }) {
+	const page = Number(url.searchParams.get('page')) || 0;
+	const perPage = Number(url.searchParams.get('perPage')) || 10;
+	const productos = await Product.getAll.run(undefined, pool);
 
 	return {
-		products
+		products: paginar(productos, page, perPage)
 	};
 };

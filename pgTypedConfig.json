@@ -7,7 +7,7 @@
 		},
 		{
 			"mode": "ts",
-			"include": "models/**/*.ts",
+			"include": "models/*.ts",
 			"emitTemplate": "{{dir}}/{{name}}.types.ts"
 		}
 	],
@@ -17,7 +17,7 @@
 	"db": {
 		"host": "localhost",
 		"user": "postgres",
-		"dbName": "threads",
+		"dbName": "stocks",
 		"password": "password"
 	}
 }
