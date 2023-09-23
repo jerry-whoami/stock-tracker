@@ -87,7 +87,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.products.items as row (row.code)}
+				{#each data.products.items as row (row.id)}
 					<tr class="border-b transition border-b-surface-500/70 hover:bg-surface-700/30">
 						<td
 							on:click={() => openModal(row)}

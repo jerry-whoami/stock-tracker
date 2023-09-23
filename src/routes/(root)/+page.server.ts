@@ -3,15 +3,125 @@ import * as Product from '../../models/products';
 import { pool } from '$lib/server/database';
 import { paginate } from '$lib/algoritmos';
 import type { Actions } from '@sveltejs/kit';
-import type { ICreateParams, IDestroyParams, IUpdateParams } from '../../models/products.types';
+import type {
+	ICreateParams,
+	IDestroyParams,
+	IGetAllResult,
+	IUpdateParams
+} from '../../models/products.types';
+
+const registrosPrueba: IGetAllResult[] = [
+	{
+		id: 1,
+		code: '19282',
+		title: 'Producto 1',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 2,
+		code: '19282',
+		title: 'Producto 2',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 3,
+		code: '19282',
+		title: 'Producto 3',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 4,
+		code: '19282',
+		title: 'Producto 4',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 5,
+		code: '19282',
+		title: 'Producto 5',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 6,
+		code: '19282',
+		title: 'Producto 6',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 7,
+		code: '19282',
+		title: 'Producto 7',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 8,
+		code: '19282',
+		title: 'Producto 8',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 9,
+		code: '19282',
+		title: 'Producto 9',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	},
+	{
+		id: 10,
+		code: '19282',
+		title: 'Producto 10',
+		description: '',
+		price: 123,
+		cost: 68.12,
+		quantity: 45,
+		sold: 9
+	}
+];
 
 export const load: PageServerLoad = async function ({ url }) {
 	const page = Number(url.searchParams.get('currentPage')) || 1;
 	const perPage = Number(url.searchParams.get('perPage')) || 10;
-	let products = await Product.getAll.run(undefined, pool);
+	// Quitar comentario para usar la base de datos
+	// let products = await Product.getAll.run(undefined, pool);
 
 	return {
-		products: paginate(products, page, perPage)
+		// Cambiar registrosPrueba a products para utilizar la base de datos
+		products: paginate(registrosPrueba, page, perPage)
 	};
 };
 
