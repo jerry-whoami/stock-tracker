@@ -1,11 +1,11 @@
 version: '3'
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: node:18-alpine
     ports:
       - '80:5173'
+    working_dir: /app
+    command: sh -c "npm rebuild esbuild && npm run dev"
     volumes:
       - .:/app
     networks:
