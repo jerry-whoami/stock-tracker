@@ -32,7 +32,7 @@
 			<button
 				type="button"
 				use:popup={menu}
-				class="btn-icon variant-soft-surface hover:variant-soft-primary"
+				class="my-2 btn-icon variant-soft-surface hover:variant-soft-primary"
 				class:variant-soft-primary={menuOpen}
 			>
 				<iconify-icon icon="material-symbols:menu-rounded" height="24" />
@@ -45,12 +45,6 @@
 							<iconify-icon icon="bi:collection-fill" />
 						</svelte:fragment>
 						Productos
-					</MenuItem>
-					<MenuItem href="#">
-						<svelte:fragment slot="icon">
-							<iconify-icon icon="bi:collection-fill" />
-						</svelte:fragment>
-						Reportes
 					</MenuItem>
 				</div>
 			</div>

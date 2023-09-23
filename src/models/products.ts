@@ -2,7 +2,7 @@ import { sql } from '@pgtyped/runtime';
 import type { IGetAllQuery, ICreateQuery, IUpdateQuery, IDestroyQuery } from './products.types';
 
 export const getAll = sql<IGetAllQuery>`
-  SELECT * FROM products;
+  SELECT * FROM products ORDER BY id;
 `;
 
 export const create = sql<ICreateQuery>`

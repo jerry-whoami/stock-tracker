@@ -51,38 +51,38 @@
 </header>
 
 <section class="mt-4">
-	<div class="flex justify-between items-center p-4">
-		<div>
+	<div class="grid grid-cols-2 gap-4 items-center p-4">
+		<div class="flex col-span-full gap-2 items-center sm:col-span-1 max-sm:justify-end">
 			<select
 				bind:value={perPage}
 				on:change={() => navigate(1)}
-				class="py-1 max-w-min rounded-lg select"
+				class="py-1 max-w-min rounded-lg select max-sm:order-2"
 			>
 				<option value={10}>10</option>
 				<option value={25}>25</option>
 				<option value={50}>50</option>
 			</select>
-			<span class="text-white">por página</span>
+			<span class="text-white max-sm:order-1">Por página</span>
 		</div>
-		<div class="flex gap-x-2 items-center">
+		<div class="flex col-span-full gap-x-2 justify-end items-center sm:col-span-1">
 			<iconify-icon icon="material-symbols:search" height="32" class="text-gray-700" />
 			<input
 				bind:value={search}
 				type="text"
-				class="rounded-lg input"
+				class="max-w-sm rounded-lg input"
 				placeholder="Código de producto"
 			/>
 		</div>
 	</div>
-	<div class="overflow-hidden rounded-xl">
+	<div class="overflow-x-auto rounded-xl">
 		<table class="w-full text-left">
 			<thead class="font-bold tracking-wider bg-surface-700">
 				<tr class="border-b border-b-surface-500/30">
 					<th class="p-4">Código</th>
 					<th class="p-4">Título</th>
-					<th class="p-4">Cantidad</th>
-					<th class="p-4">Precio</th>
-					<th class="p-4">Costo</th>
+					<th class="p-4 max-sm:hidden">Cantidad</th>
+					<th class="p-4 max-md:hidden">Precio</th>
+					<th class="p-4 max-md:hidden">Costo</th>
 					<th class="p-4" />
 				</tr>
 			</thead>
@@ -96,10 +96,16 @@
 							{row.code}
 						</td>
 						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.title}</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.quantity}</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.price}</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.cost}</td>
-						<td class="p-4 cursor-pointer max-w-fit">
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer max-sm:hidden">
+							{row.quantity}
+						</td>
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer max-md:hidden">
+							{row.price}
+						</td>
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer max-md:hidden">
+							{row.cost}
+						</td>
+						<td class="p-4 w-16 cursor-pointer">
 							<form action="?/delete" method="post" use:enhance>
 								<input name="code" value={row.code} type="hidden" />
 								<button class="btn-icon variant-filled-surface" type="submit">
@@ -112,7 +118,7 @@
 			</tbody>
 			<tfoot class="">
 				<tr>
-					<td class="p-4 text-right" colspan="6">
+					<td class="p-4 text-right max-sm:text-center" colspan="6">
 						<div class="rounded-xl btn-group variant-filled-surface">
 							<button
 								type="button"
@@ -126,7 +132,10 @@
 								<button
 									type="button"
 									on:click={() => navigate(i + 1)}
-									class={currentPage === i + 1 ? 'hover:!bg-primary-600 bg-primary-500' : ''}
+									disabled={currentPage === i + 1}
+									class={currentPage === i + 1
+										? 'hover:!bg-primary-600 bg-primary-500'
+										: 'max-md:!hidden'}
 								>
 									{i + 1}
 								</button>

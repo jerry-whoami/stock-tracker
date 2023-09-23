@@ -1,4 +1,5 @@
 CREATE TABLE products (
+  id SERIAL NOT NULL,
   code VARCHAR(50) UNIQUE NOT NULL,
   title VARCHAR NOT NULL,
   description TEXT,
@@ -6,7 +7,7 @@ CREATE TABLE products (
   price FLOAT,
   cost FLOAT,
   sold INT DEFAULT 0,
-  PRIMARY KEY(code)
+  PRIMARY KEY(id)
 );
 
 COPY products (code, title, description, quantity, price, cost, sold)

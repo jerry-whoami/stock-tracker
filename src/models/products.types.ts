@@ -8,6 +8,7 @@ export interface IGetAllResult {
   code: string;
   cost: number | null;
   description: string | null;
+  id: number;
   price: number | null;
   quantity: number | null;
   sold: number | null;
