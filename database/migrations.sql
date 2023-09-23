@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS products;
+
 CREATE TABLE products (
   id SERIAL NOT NULL,
   code VARCHAR(50) UNIQUE NOT NULL,
