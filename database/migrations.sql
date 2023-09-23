@@ -1,4 +1,4 @@
-CREATE TABLE product (
+CREATE TABLE products (
   code VARCHAR(50) UNIQUE NOT NULL,
   title VARCHAR NOT NULL,
   description TEXT,

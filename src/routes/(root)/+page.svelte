@@ -1,13 +1,32 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { getModalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
+	import type { IGetAllResult } from '../../models/products.types.js';
+	import RecordModal from './RecordModal.svelte';
+	import { enhance } from '$app/forms';
 
 	export let data;
 
 	let search = '';
 	let perPage = data.products.perPage;
 	$: currentPage = data.products.currentPage;
-	$: console.log(currentPage);
+
+	const modalStore = getModalStore();
+
+	function openModal(record: IGetAllResult | null = null) {
+		const modal: ModalComponent = {
+			ref: RecordModal,
+			props: { record }
+		};
+
+		const settings: ModalSettings = {
+			type: 'component',
+			component: modal
+		};
+
+		modalStore.trigger(settings);
+	}
 
 	function navigate(page: number) {
 		$page.url.searchParams.set('perPage', perPage.toString());
@@ -21,7 +40,13 @@
 <header class="flex justify-between items-center px-4 mb-4">
 	<h1 class="h1">Productos</h1>
 	<div class="flex items-center">
-		<button class="rounded-xl btn variant-filled-primary" type="button"> Reportes </button>
+		<button
+			class="rounded-xl btn variant-filled-primary"
+			type="button"
+			on:click={() => openModal()}
+		>
+			Crear
+		</button>
 	</div>
 </header>
 
@@ -37,7 +62,7 @@
 				<option value={25}>25</option>
 				<option value={50}>50</option>
 			</select>
-			<span class="text-gray-700">por página</span>
+			<span class="text-white">por página</span>
 		</div>
 		<div class="flex gap-x-2 items-center">
 			<iconify-icon icon="material-symbols:search" height="32" class="text-gray-700" />
@@ -51,30 +76,44 @@
 	</div>
 	<div class="overflow-hidden rounded-xl">
 		<table class="w-full text-left">
-			<thead class="font-bold tracking-wider bg-surface-200">
+			<thead class="font-bold tracking-wider bg-surface-700">
 				<tr class="border-b border-b-surface-500/30">
 					<th class="p-4">Código</th>
 					<th class="p-4">Título</th>
 					<th class="p-4">Cantidad</th>
 					<th class="p-4">Precio</th>
 					<th class="p-4">Costo</th>
+					<th class="p-4" />
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.products.items as row}
-					<tr class="border-b transition border-b-surface-500/30 hover:bg-surface-300/30">
-						<td class="p-4 font-bold text-primary-500">{row.code}</td>
-						<td class="p-4">{row.title}</td>
-						<td class="p-4">{row.quantity}</td>
-						<td class="p-4">{row.price}</td>
-						<td class="p-4">{row.cost}</td>
+				{#each data.products.items as row (row.code)}
+					<tr class="border-b transition border-b-surface-500/70 hover:bg-surface-700/30">
+						<td
+							on:click={() => openModal(row)}
+							class="p-4 font-bold cursor-pointer text-primary-500"
+						>
+							{row.code}
+						</td>
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.title}</td>
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.quantity}</td>
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.price}</td>
+						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.cost}</td>
+						<td class="p-4 cursor-pointer max-w-fit">
+							<form action="?/delete" method="post" use:enhance>
+								<input name="code" value={row.code} type="hidden" />
+								<button class="btn-icon variant-filled-surface" type="submit">
+									<iconify-icon class="text-error-500" icon="mdi:trash-can-outline" />
+								</button>
+							</form>
+						</td>
 					</tr>
 				{/each}
 			</tbody>
-			<tfoot class="bg-surface-200">
+			<tfoot class="">
 				<tr>
-					<td class="p-4 text-right" colspan="5">
-						<div class="rounded-xl btn-group variant-filled">
+					<td class="p-4 text-right" colspan="6">
+						<div class="rounded-xl btn-group variant-filled-surface">
 							<button
 								type="button"
 								on:click={() => navigate(currentPage - 1)}
@@ -87,7 +126,7 @@
 								<button
 									type="button"
 									on:click={() => navigate(i + 1)}
-									class={currentPage === i + 1 ? 'hover:!bg-primary-500 bg-primary-500' : ''}
+									class={currentPage === i + 1 ? 'hover:!bg-primary-600 bg-primary-500' : ''}
 								>
 									{i + 1}
 								</button>
