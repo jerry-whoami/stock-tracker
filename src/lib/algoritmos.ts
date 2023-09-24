@@ -78,3 +78,51 @@ function sortDescending(records: IGetAllResult[], column: string): IGetAllResult
 
 	return sortedProducts;
 }
+
+//filter by code
+export function filterProductsByCode(
+	products: IGetAllResult[],
+	code: number | string
+): IGetAllResult[] {
+	let searchCode = code.toString();
+	let filterProducts: IGetAllResult[] = [];
+
+	for (let i = 0; i < products.length; i++) {
+		let productTemp = products[i];
+		let productCode = productTemp.code.toString();
+
+		if (searchCode.length > productCode.length) {
+			continue;
+		}
+
+		for (let j = 0; j <= productCode.length - searchCode.length; j++) {
+			let match = true;
+			for (let k = 0; k < searchCode.length; k++) {
+				if (searchCode[k] !== productCode[j + k]) {
+					match = false;
+					break;
+				}
+			}
+			if (match) {
+				filterProducts.push(productTemp);
+				break;
+			}
+		}
+	}
+
+	return filterProducts;
+}
+
+//filter by availability in stock
+export function filterProductsByAvailability(products: IGetAllResult[]): IGetAllResult[] {
+	let productsInStock: IGetAllResult[] = [];
+
+	for (let i = 0; i < products.length; i++) {
+		let productTemp = products[i];
+		if (productTemp.quantity > 0) {
+			productsInStock.push(productTemp);
+		}
+	}
+
+	return productsInStock;
+}
