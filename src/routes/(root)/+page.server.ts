@@ -13,104 +13,45 @@ import type {
 const registrosPrueba: IGetAllResult[] = [
 	{
 		id: 1,
-		code: '19282',
+		code: '19281',
 		title: 'Producto 1',
 		description: '',
 		price: 123,
 		cost: 68.12,
 		quantity: 45,
-		sold: 9
+		sold: 3
 	},
 	{
 		id: 2,
 		code: '19282',
 		title: 'Producto 2',
 		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
+		price: 13,
+		cost: 62,
+		quantity: 25,
 		sold: 9
 	},
 	{
 		id: 3,
-		code: '19282',
+		code: '19283',
 		title: 'Producto 3',
 		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
+		price: 120,
+		cost: 61,
+		quantity: 145,
+		sold: 10
 	},
 	{
 		id: 4,
-		code: '19282',
+		code: '19284',
 		title: 'Producto 4',
 		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
+		price: 50,
+		cost: 48.12,
+		quantity: 5,
+		sold: 2
 	},
-	{
-		id: 5,
-		code: '19282',
-		title: 'Producto 5',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
-	},
-	{
-		id: 6,
-		code: '19282',
-		title: 'Producto 6',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
-	},
-	{
-		id: 7,
-		code: '19282',
-		title: 'Producto 7',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
-	},
-	{
-		id: 8,
-		code: '19282',
-		title: 'Producto 8',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
-	},
-	{
-		id: 9,
-		code: '19282',
-		title: 'Producto 9',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
-	},
-	{
-		id: 10,
-		code: '19282',
-		title: 'Producto 10',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 9
-	}
+
 ];
 
 export const load: PageServerLoad = async function ({ url }) {
@@ -118,6 +59,13 @@ export const load: PageServerLoad = async function ({ url }) {
 	const perPage = Number(url.searchParams.get('perPage')) || 10;
 	// Quitar comentario para usar la base de datos
 	// let products = await Product.getAll.run(undefined, pool);
+	// const BusquedaPorValor = searchByValue(registrosPrueba);
+	// const productosPorPrecioDescendente = sortByPriceDescending(registrosPrueba);
+	// const productosPorPrecioAscendente = sortByPriceAscending(registrosPrueba);
+	// const productosPorCantidadDescendente = sortByQuantifyDescending(registrosPrueba);
+	// const productosPorCantidadAscendente = sortByQuantifyAscending(registrosPrueba);
+	// const productosPorCostoDescendente = sortByCostDescending(registrosPrueba);
+	// const productosPorCostoAscendente = sortByCostAscending(registrosPrueba);
 
 	return {
 		// Cambiar registrosPrueba a products para utilizar la base de datos
