@@ -5,12 +5,16 @@
 	import type { IGetAllResult } from '../../models/products.types.js';
 	import RecordModal from './RecordModal.svelte';
 	import { enhance } from '$app/forms';
+	import { Cell, Heading, Row, Table } from '$lib/components/Table/index.js';
 
 	export let data;
 
 	let search = '';
 	let perPage = data.products.perPage;
+	let sortOrder = $page.url.searchParams.get('sortOrder');
+	let sortField = $page.url.searchParams.get('sortField');
 	$: currentPage = data.products.currentPage;
+	$: console.log(sortField, sortOrder);
 
 	const modalStore = getModalStore();
 
@@ -26,6 +30,28 @@
 		};
 
 		modalStore.trigger(settings);
+	}
+
+	function sortBy(field: string) {
+		sortOrder = $page.url.searchParams.get('sortOrder');
+		sortField = field;
+
+		if (!sortOrder) {
+			$page.url.searchParams.set('sortField', field.toString());
+			$page.url.searchParams.set('sortOrder', 'asc');
+		} else if (sortOrder === 'asc') {
+			$page.url.searchParams.set('sortField', field.toString());
+			$page.url.searchParams.set('sortOrder', 'desc');
+		} else {
+			$page.url.searchParams.delete('sortField');
+			$page.url.searchParams.delete('sortOrder');
+			sortField = null;
+		}
+
+		sortOrder = $page.url.searchParams.get('sortOrder');
+		history.replaceState(history.state, '', $page.url);
+
+		invalidateAll();
 	}
 
 	function navigate(page: number) {
@@ -75,50 +101,65 @@
 		</div>
 	</div>
 	<div class="overflow-x-auto rounded-xl">
-		<table class="w-full text-left">
-			<thead class="font-bold tracking-wider bg-surface-700">
-				<tr class="border-b border-b-surface-500/30">
-					<th class="p-4">Código</th>
-					<th class="p-4">Título</th>
-					<th class="p-4 max-sm:hidden">Cantidad</th>
-					<th class="p-4 max-md:hidden">Precio</th>
-					<th class="p-4 max-md:hidden">Costo</th>
-					<th class="p-4" />
-				</tr>
-			</thead>
-			<tbody>
+		<Table>
+			<svelte:fragment slot="head">
+				<Heading class="p-4">Código</Heading>
+				<Heading class="p-4">Título</Heading>
+				<Heading
+					sortable
+					direction={sortOrder}
+					active={sortField === 'quantity'}
+					on:click={() => sortBy('quantity')}
+					class="p-4 max-sm:hidden"
+				>
+					Cantidad
+				</Heading>
+				<Heading
+					sortable
+					direction={sortOrder}
+					active={sortField === 'price'}
+					on:click={() => sortBy('price')}
+					class="p-4 max-sm:hidden"
+				>
+					Precio
+				</Heading>
+				<Heading
+					sortable
+					direction={sortOrder}
+					active={sortField === 'cost'}
+					on:click={() => sortBy('cost')}
+					class="p-4 max-sm:hidden"
+				>
+					Costo
+				</Heading>
+				<Heading class="p-4" />
+			</svelte:fragment>
+			<svelte:fragment slot="body">
 				{#each data.products.items as row (row.id)}
-					<tr class="border-b transition border-b-surface-500/70 hover:bg-surface-700/30">
-						<td
-							on:click={() => openModal(row)}
-							class="p-4 font-bold cursor-pointer text-primary-500"
+					<Row>
+						<Cell clickable on:click={() => openModal(row)} class="font-bold text-primary-500"
+							>{row.code}</Cell
 						>
-							{row.code}
-						</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer">{row.title}</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer max-sm:hidden">
-							{row.quantity}
-						</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer max-md:hidden">
-							{row.price}
-						</td>
-						<td on:click={() => openModal(row)} class="p-4 cursor-pointer max-md:hidden">
-							{row.cost}
-						</td>
-						<td class="p-4 w-16 cursor-pointer">
+						<Cell clickable on:click={() => openModal(row)}>{row.title}</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="max-sm:hidden"
+							>{row.quantity}</Cell
+						>
+						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">{row.price}</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">{row.cost}</Cell>
+						<Cell clickable class="w-16">
 							<form action="?/delete" method="post" use:enhance>
 								<input name="code" value={row.code} type="hidden" />
 								<button class="btn-icon variant-filled-surface" type="submit">
 									<iconify-icon class="text-error-500" icon="mdi:trash-can-outline" />
 								</button>
 							</form>
-						</td>
-					</tr>
+						</Cell>
+					</Row>
 				{/each}
-			</tbody>
-			<tfoot class="">
+			</svelte:fragment>
+			<svelte:fragment slot="foot">
 				<tr>
-					<td class="p-4 text-right max-sm:text-center" colspan="6">
+					<Cell class="text-right max-sm:text-center" colspan="6">
 						<div class="rounded-xl btn-group variant-filled-surface">
 							<button
 								type="button"
@@ -149,9 +190,9 @@
 								<iconify-icon icon="mdi:chevron-right" />
 							</button>
 						</div>
-					</td>
+					</Cell>
 				</tr>
-			</tfoot>
-		</table>
+			</svelte:fragment>
+		</Table>
 	</div>
 </section>

@@ -1,64 +1,18 @@
 import type { PageServerLoad } from './$types';
 import * as Product from '../../models/products';
 import { pool } from '$lib/server/database';
-import { paginate } from '$lib/algoritmos';
+import { SortOrder, paginate, sort } from '$lib/algoritmos';
 import type { Actions } from '@sveltejs/kit';
-import type {
-	ICreateParams,
-	IDestroyParams,
-	IGetAllResult,
-	IUpdateParams
-} from '../../models/products.types';
-
-const registrosPrueba: IGetAllResult[] = [
-	{
-		id: 1,
-		code: '19281',
-		title: 'Producto 1',
-		description: '',
-		price: 123,
-		cost: 68.12,
-		quantity: 45,
-		sold: 3
-	},
-	{
-		id: 2,
-		code: '19282',
-		title: 'Producto 2',
-		description: '',
-		price: 13,
-		cost: 62,
-		quantity: 25,
-		sold: 9
-	},
-	{
-		id: 3,
-		code: '19283',
-		title: 'Producto 3',
-		description: '',
-		price: 120,
-		cost: 61,
-		quantity: 145,
-		sold: 10
-	},
-	{
-		id: 4,
-		code: '19284',
-		title: 'Producto 4',
-		description: '',
-		price: 50,
-		cost: 48.12,
-		quantity: 5,
-		sold: 2
-	},
-
-];
+import type { ICreateParams, IDestroyParams, IUpdateParams } from '../../models/products.types';
 
 export const load: PageServerLoad = async function ({ url }) {
 	const page = Number(url.searchParams.get('currentPage')) || 1;
 	const perPage = Number(url.searchParams.get('perPage')) || 10;
-	// Quitar comentario para usar la base de datos
-	// let products = await Product.getAll.run(undefined, pool);
+	const sortField = url.searchParams.get('sortField') || 'id';
+	const sortOrder = url.searchParams.get('sortOrder') as 'asc' | 'desc' | undefined;
+
+	let products = await Product.getAll.run(undefined, pool);
+	products = sort(products, sortField, sortOrder);
 	// const BusquedaPorValor = searchByValue(registrosPrueba);
 	// const productosPorPrecioDescendente = sortByPriceDescending(registrosPrueba);
 	// const productosPorPrecioAscendente = sortByPriceAscending(registrosPrueba);
@@ -68,8 +22,7 @@ export const load: PageServerLoad = async function ({ url }) {
 	// const productosPorCostoAscendente = sortByCostAscending(registrosPrueba);
 
 	return {
-		// Cambiar registrosPrueba a products para utilizar la base de datos
-		products: paginate(registrosPrueba, page, perPage)
+		products: paginate(products, page, perPage)
 	};
 };
 

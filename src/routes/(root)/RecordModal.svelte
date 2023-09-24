@@ -98,10 +98,14 @@
 				</label>
 			</div>
 			<footer class="modal-footer {parent.regionFooter}">
-				<button class="btn {parent.buttonNeutral}" type="button" on:click={parent.onClose}>
+				<button
+					class="btn rounded-xl {parent.buttonNeutral}"
+					type="button"
+					on:click={parent.onClose}
+				>
 					{parent.buttonTextCancel}
 				</button>
-				<button class="btn variant-filled-primary" type="submit"> Guardar </button>
+				<button class="rounded-xl btn variant-filled-primary" type="submit"> Guardar </button>
 			</footer>
 		</form>
 	</div>
