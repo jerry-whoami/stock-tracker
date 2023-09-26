@@ -19,20 +19,15 @@ export function paginate<T>(records: Array<T>, currentPage = 1, perPage = 10): P
 		items: records.slice(start, start + perPage)
 	};
 }
-// Search for value ** No DATABASE**
-export function SearchByValue(valor: string) {
-	const productosEncontrados = registrosPrueba.filter((producto) => {
-		//sin base de datos
+
+export function searchByValue(productos: IGetAllResult[], valor: string): IGetAllResult[] {
+	const productosEncontrados = productos.filter((producto) => {
 		return Object.values(producto).some((atributo) =>
-			atributo.toString().toLowerCase().includes(valor.toLowerCase())
+			atributo?.toString().toLowerCase().includes(valor.toLowerCase())
 		);
 	});
 
-	if (productosEncontrados.length > 0) {
-		return productosEncontrados;
-	} else {
-		return null; // null = no find
-	}
+	return productosEncontrados;
 }
 
 export function sort(

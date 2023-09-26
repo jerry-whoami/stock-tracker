@@ -89,6 +89,14 @@
 							min="0"
 						/>
 					</label>
+					<label class="col-span-full label">
+						<span>Ganancias</span>
+						<input
+							class="rounded-xl input"
+							value={(record.price ?? 0) * (record.sold ?? 0)}
+							disabled
+						/>
+					</label>
 				{/if}
 				<label class="col-span-full label">
 					<span>Descripción</span>

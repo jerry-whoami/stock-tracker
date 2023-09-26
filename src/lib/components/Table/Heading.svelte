@@ -7,9 +7,9 @@
 	export let active = false;
 </script>
 
-<th {...$$restProps}>
+<th class={'p-4 ' + classNames} {...$$restProps}>
 	{#if sortable}
-		<button on:click type="button" class={'flex gap-2 items-center p-4 group ' + classNames}>
+		<button on:click type="button" class="flex gap-2 items-center group">
 			<slot />
 			<div class="inline-flex flex-col justify-center items-center">
 				{#if active && direction === 'asc'}
@@ -25,7 +25,7 @@
 			</div>
 		</button>
 	{:else}
-		<div class={'p-4 ' + classNames}>
+		<div>
 			<slot />
 		</div>
 	{/if}

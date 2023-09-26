@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import * as Product from '../../models/products';
 import { pool } from '$lib/server/database';
-import { SortOrder, paginate, sort } from '$lib/algoritmos';
+import { filterProductsByCode, paginate, searchByValue, sort } from '$lib/algoritmos';
 import type { Actions } from '@sveltejs/kit';
 import type { ICreateParams, IDestroyParams, IUpdateParams } from '../../models/products.types';
 
@@ -10,16 +10,11 @@ export const load: PageServerLoad = async function ({ url }) {
 	const perPage = Number(url.searchParams.get('perPage')) || 10;
 	const sortField = url.searchParams.get('sortField') || 'id';
 	const sortOrder = url.searchParams.get('sortOrder') as 'asc' | 'desc' | undefined;
+	const search = url.searchParams.get('search') ?? '';
 
 	let products = await Product.getAll.run(undefined, pool);
+	products = filterProductsByCode(products, search);
 	products = sort(products, sortField, sortOrder);
-	// const BusquedaPorValor = searchByValue(registrosPrueba);
-	// const productosPorPrecioDescendente = sortByPriceDescending(registrosPrueba);
-	// const productosPorPrecioAscendente = sortByPriceAscending(registrosPrueba);
-	// const productosPorCantidadDescendente = sortByQuantifyDescending(registrosPrueba);
-	// const productosPorCantidadAscendente = sortByQuantifyAscending(registrosPrueba);
-	// const productosPorCostoDescendente = sortByCostDescending(registrosPrueba);
-	// const productosPorCostoAscendente = sortByCostAscending(registrosPrueba);
 
 	return {
 		products: paginate(products, page, perPage)

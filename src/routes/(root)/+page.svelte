@@ -9,12 +9,11 @@
 
 	export let data;
 
-	let search = '';
 	let perPage = data.products.perPage;
+	let search = $page.url.searchParams.get('search');
 	let sortOrder = $page.url.searchParams.get('sortOrder');
 	let sortField = $page.url.searchParams.get('sortField');
 	$: currentPage = data.products.currentPage;
-	$: console.log(sortField, sortOrder);
 
 	const modalStore = getModalStore();
 
@@ -32,16 +31,25 @@
 		modalStore.trigger(settings);
 	}
 
+	function searchByCode() {
+		search ? $page.url.searchParams.set('search', search) : $page.url.searchParams.delete('search');
+		history.replaceState(history.state, '', $page.url);
+
+		invalidateAll();
+	}
+
 	function sortBy(field: string) {
 		sortOrder = $page.url.searchParams.get('sortOrder');
-		sortField = field;
+		sortField = $page.url.searchParams.get('sortField');
 
-		if (!sortOrder) {
+		if (!sortOrder || sortField !== field) {
 			$page.url.searchParams.set('sortField', field.toString());
 			$page.url.searchParams.set('sortOrder', 'asc');
+			sortField = field;
 		} else if (sortOrder === 'asc') {
 			$page.url.searchParams.set('sortField', field.toString());
 			$page.url.searchParams.set('sortOrder', 'desc');
+			sortField = field;
 		} else {
 			$page.url.searchParams.delete('sortField');
 			$page.url.searchParams.delete('sortOrder');
@@ -79,11 +87,7 @@
 <section class="mt-4">
 	<div class="grid grid-cols-2 gap-4 items-center p-4">
 		<div class="flex col-span-full gap-2 items-center sm:col-span-1 max-sm:justify-end">
-			<select
-				bind:value={perPage}
-				on:change={() => navigate(1)}
-				class="py-1 max-w-min rounded-lg select max-sm:order-2"
-			>
+			<select bind:value={perPage} class="py-1 max-w-min rounded-lg select max-sm:order-2">
 				<option value={10}>10</option>
 				<option value={25}>25</option>
 				<option value={50}>50</option>
@@ -94,6 +98,7 @@
 			<iconify-icon icon="material-symbols:search" height="32" class="text-gray-700" />
 			<input
 				bind:value={search}
+				on:change={() => searchByCode()}
 				type="text"
 				class="max-w-sm rounded-lg input"
 				placeholder="Código de producto"
@@ -119,7 +124,7 @@
 					direction={sortOrder}
 					active={sortField === 'price'}
 					on:click={() => sortBy('price')}
-					class="p-4 max-sm:hidden"
+					class="p-4 max-md:hidden"
 				>
 					Precio
 				</Heading>
@@ -128,10 +133,20 @@
 					direction={sortOrder}
 					active={sortField === 'cost'}
 					on:click={() => sortBy('cost')}
-					class="p-4 max-sm:hidden"
+					class="p-4 max-md:hidden"
 				>
 					Costo
 				</Heading>
+				<Heading
+					sortable
+					direction={sortOrder}
+					active={sortField === 'sold'}
+					on:click={() => sortBy('sold')}
+					class="p-4 max-md:hidden"
+				>
+					Vendidos
+				</Heading>
+				<Heading class="p-4 max-md:hidden">Ganancias</Heading>
 				<Heading class="p-4" />
 			</svelte:fragment>
 			<svelte:fragment slot="body">
@@ -141,11 +156,22 @@
 							>{row.code}</Cell
 						>
 						<Cell clickable on:click={() => openModal(row)}>{row.title}</Cell>
-						<Cell clickable on:click={() => openModal(row)} class="max-sm:hidden"
-							>{row.quantity}</Cell
-						>
-						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">{row.price}</Cell>
-						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">{row.cost}</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="space-y-4 max-sm:hidden">
+							<span> {row.quantity} </span>
+							{#if (row.quantity ?? 0) < 10}
+								<span class="bg-red-700 badge"> Surtir </span>
+							{/if}
+						</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">
+							$ {row.price}
+						</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">
+							$ {row.cost}
+						</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">{row.sold}</Cell>
+						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">
+							$ {((row.price ?? 0) * (row.sold ?? 0)).toFixed(2)}
+						</Cell>
 						<Cell clickable class="w-16">
 							<form action="?/delete" method="post" use:enhance>
 								<input name="code" value={row.code} type="hidden" />
@@ -159,7 +185,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="foot">
 				<tr>
-					<Cell class="text-right max-sm:text-center" colspan="6">
+					<Cell class="text-right max-sm:text-center" colspan="8">
 						<div class="rounded-xl btn-group variant-filled-surface">
 							<button
 								type="button"
