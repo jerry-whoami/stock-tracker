@@ -1,4 +1,4 @@
-# NOMBRE DE TIENDA
+# ZapaStyle
 
 Sistema de gestión de inventario de una tienda de zapatillas
 
@@ -24,7 +24,7 @@ npm install
 3. Preparar la base de datos(Puede que tengas que cambiar el nombre del contenedor)
 
 ```bash
-docker cp ./database/seeder.csv stocktracker-postgres-1:/docker-entrypoint-initdb.d/products.csv
+docker cp ./database/seeder.csv stocktracker-postgres0:/docker-entrypoint-initdb.d/products.csv
 cat ./database/migrations.sql | docker exec -i stocktracker-postgres-1 psql -U postgres -d stocks
 ```
 

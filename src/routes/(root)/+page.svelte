@@ -101,7 +101,7 @@
 				on:change={() => searchByCode()}
 				type="text"
 				class="max-w-sm rounded-lg input"
-				placeholder="Código de producto"
+				placeholder="Buscar..."
 			/>
 		</div>
 	</div>
@@ -156,10 +156,13 @@
 							>{row.code}</Cell
 						>
 						<Cell clickable on:click={() => openModal(row)}>{row.title}</Cell>
-						<Cell clickable on:click={() => openModal(row)} class="space-y-4 max-sm:hidden">
+						<Cell clickable on:click={() => openModal(row)} class="max-sm:hidden">
 							<span> {row.quantity} </span>
 							{#if (row.quantity ?? 0) < 10}
-								<span class="bg-red-700 badge"> Surtir </span>
+								<span class="bg-red-700 badge">
+									<iconify-icon icon="zondicons:exclamation-outline" />
+									<span class="uppercase">Surtir</span>
+								</span>
 							{/if}
 						</Cell>
 						<Cell clickable on:click={() => openModal(row)} class="max-md:hidden">

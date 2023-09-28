@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import * as Product from '../../models/products';
 import { pool } from '$lib/server/database';
-import { filterProductsByCode, paginate, searchByValue, sort } from '$lib/algoritmos';
+import { paginate, searchByValue, sort } from '$lib/algoritmos';
 import type { Actions } from '@sveltejs/kit';
 import type { ICreateParams, IDestroyParams, IUpdateParams } from '../../models/products.types';
 
@@ -13,7 +13,7 @@ export const load: PageServerLoad = async function ({ url }) {
 	const search = url.searchParams.get('search') ?? '';
 
 	let products = await Product.getAll.run(undefined, pool);
-	products = filterProductsByCode(products, search);
+	products = searchByValue(products, search);
 	products = sort(products, sortField, sortOrder);
 
 	return {
